@@ -1,0 +1,11 @@
+services:
+  global-exception-handler.api:
+    image: ${DOCKER_REGISTRY-}global-exception-handler-api
+    container_name: GlobalExceptionHandler.Api
+    ports:
+      - 80:80
+      - 443:443
+    build:
+      context: .
+      dockerfile: src/GlobalExceptionHandler.Api/Dockerfile
+      target: final
