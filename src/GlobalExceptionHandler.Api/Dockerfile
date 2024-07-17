@@ -11,6 +11,17 @@ RUN dotnet publish -c Release -o /app
 
 # Copy everything needed to run the app from the "build" stage.
 FROM base AS final
+
+# Microsoft.Data.SqlClient requires ICU to be installed
+ENV \
+    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
+    LC_ALL=en_US.UTF-8 \
+    LANG=en_US.UTF-8
+
+RUN apk add --no-cache \
+    icu-data-full \
+    icu-libs
+
 WORKDIR /app
 COPY --from=build /app .
 ENTRYPOINT ["dotnet", "GlobalExceptionHandler.Api.dll"]

@@ -1,9 +1,0 @@
-services:
-  global-exception-handler.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-    
-    volumes:
-      - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets:ro
-      - ${HOME}/.aspnet/https:/root/.aspnet/https:ro

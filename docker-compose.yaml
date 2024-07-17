@@ -2,6 +2,12 @@ services:
   global-exception-handler.api:
     image: ${DOCKER_REGISTRY-}global-exception-handler-api
     container_name: GlobalExceptionHandler.Api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    volumes:
+      - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets:ro
+      - ${HOME}/.aspnet/https:/root/.aspnet/https:ro
     ports:
       - 80:80
       - 443:443
@@ -9,3 +15,16 @@ services:
       context: .
       dockerfile: src/GlobalExceptionHandler.Api/Dockerfile
       target: final
+    depends_on:
+      - products-db
+  
+  products-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: Products.Db
+    volumes:
+      - ./data:/var/opt/mssql/data
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: 'Y'
+      MSSQL_SA_PASSWORD: 'Passw0rd'
