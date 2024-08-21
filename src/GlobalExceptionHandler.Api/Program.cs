@@ -1,4 +1,7 @@
+using Carter;
+using FluentValidation;
 using GlobalExceptionHandler.Api;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +14,19 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Database")));
 
+builder.Services.AddMediatR(config => 
+    config.RegisterServicesFromAssemblies(typeof(Program).Assembly));
+
+builder.Services.AddCarter();
+
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+
+builder.Services.AddExceptionHandler<ExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -20,6 +35,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.ApplyMigrations();
 }
+
+app.MapCarter();
 
 app.UseHttpsRedirection();
 
