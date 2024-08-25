@@ -484,3 +484,5 @@ $RECYCLE.BIN/
 *.swp
 data/Entropy.bin
 Notes.txt
+
+docs/
